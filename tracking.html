@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Pedidos - TiendaWeb</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/orders.css">
+    <link rel="stylesheet" href="css/tracking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">
+                    <a href="index.html"><i class="fas fa-shopping-bag"></i> TiendaWeb</a>
+                </h1>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Tienda</a>
+                    <a href="orders.html" class="nav-link">Pedidos</a>
+                    <a href="tracking.html" class="nav-link active">Seguimiento</a>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="tracking-main">
+        <div class="container">
+            <div class="tracking-header">
+                <h1><i class="fas fa-search-location"></i> Seguimiento de Pedidos</h1>
+                <p>Rastrea tu pedido y recibe notificaciones automáticas</p>
+            </div>
+
+            <!-- Sección de búsqueda de seguimiento -->
+            <div class="tracking-search">
+                <div class="search-card">
+                    <h2>Buscar mi Pedido</h2>
+                    <div class="search-form">
+                        <div class="form-group">
+                            <label for="tracking-input">Número de Pedido o Seguimiento:</label>
+                            <input type="text" id="tracking-input" placeholder="Ej: ORD-123456 o TRK12345678">
+                        </div>
+                        <button class="btn-primary" onclick="trackOrder()">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados de seguimiento -->
+            <div id="tracking-results" class="tracking-results" style="display: none;">
+                <!-- Los resultados se mostrarán aquí -->
+            </div>
+
+            <!-- Panel de notificaciones -->
+            <div class="notifications-panel">
+                <h2><i class="fas fa-bell"></i> Centro de Notificaciones</h2>
+                <div class="notification-options">
+                    <div class="option-card">
+                        <h3>Notificaciones por Email</h3>
+                        <p>Recibe actualizaciones automáticas sobre el estado de tus pedidos</p>
+                        <div class="demo-section">
+                            <h4>Demo: Enviar Notificación de Prueba</h4>
+                            <select id="notification-type">
+                                <option value="confirmation">Confirmación de Pedido</option>
+                                <option value="shipped">Pedido Enviado</option>
+                                <option value="delivered">Pedido Entregado</option>
+                            </select>
+                            <input type="email" id="demo-email" placeholder="tu@email.com" value="cliente@ejemplo.com">
+                            <button class="btn-secondary" onclick="sendDemoNotification()">
+                                <i class="fas fa-paper-plane"></i> Enviar Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="option-card">
+                        <h3>Historial de Notificaciones</h3>
+                        <p>Ver todas las notificaciones enviadas</p>
+                        <button class="btn-secondary" onclick="showNotificationHistory()">
+                            <i class="fas fa-history"></i> Ver Historial
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de pedidos para seguimiento rápido -->
+            <div class="quick-tracking">
+                <h2><i class="fas fa-tachometer-alt"></i> Seguimiento Rápido</h2>
+                <div id="recent-orders" class="recent-orders-grid">
+                    <!-- Se cargarán los pedidos recientes -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de detalles de seguimiento -->
+    <div id="tracking-details-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="tracking-modal-title">Detalles de Seguimiento</h3>
+                <span class="close" onclick="closeTrackingModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="tracking-modal-content">
+                    <!-- El contenido se cargará dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeTrackingModal()">Cerrar</button>
+                <button class="btn-primary" onclick="refreshTracking()">
+                    <i class="fas fa-sync"></i> Actualizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de historial de notificaciones -->
+    <div id="notification-history-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Historial de Notificaciones</h3>
+                <span class="close" onclick="closeNotificationHistoryModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="notification-history-content">
+                    <!-- El contenido se cargará dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeNotificationHistoryModal()">Cerrar</button>
+                <button class="btn-primary" onclick="clearNotificationHistory()">
+                    <i class="fas fa-trash"></i> Limpiar Historial
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista previa de email -->
+    <div id="email-preview-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Vista Previa del Email</h3>
+                <span class="close" onclick="closeEmailPreviewModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="email-preview-content">
+                    <!-- El contenido se cargará dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeEmailPreviewModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaWeb. Sistema de Seguimiento y Notificaciones.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/tracking-ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
