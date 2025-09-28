@@ -38,6 +38,15 @@ TiendaWeb es una aplicación de comercio electrónico moderna que permite a los 
   - Estadísticas y reportes
   - Exportación de datos a CSV
 
+- **Sistema de Notificaciones y Seguimiento** 📧
+  - Notificaciones automáticas por email con plantillas HTML
+  - Seguimiento en tiempo real de paquetes
+  - Integración con múltiples transportistas (DHL, FedEx, ChileExpress)
+  - Historial completo de notificaciones enviadas
+  - Panel de seguimiento con búsqueda avanzada
+  - Timeline visual del estado de envíos
+  - Notificaciones demo para testing
+
 - **Notificaciones y Promociones**
   - Sistema de notificaciones push
   - Ofertas especiales por tiempo limitado
@@ -55,14 +64,19 @@ TiendaWeb es una aplicación de comercio electrónico moderna que permite a los 
 tarea 8/
 ├── index.html              # Página principal de la tienda
 ├── orders.html             # Panel de gestión de pedidos
+├── tracking.html           # Sistema de seguimiento y notificaciones
 ├── css/
 │   ├── styles.css          # Estilos principales
-│   └── orders.css          # Estilos específicos para pedidos
+│   ├── orders.css          # Estilos específicos para pedidos
+│   ├── tracking.css        # Estilos para seguimiento
+│   └── enhancements.css    # Mejoras adicionales de UI/UX
 ├── js/
 │   ├── products.js         # Lógica de productos y catálogo
 │   ├── cart.js             # Sistema de carrito de compras
-│   ├── orders.js           # Gestión de pedidos (NUEVA FUNCIONALIDAD)
+│   ├── orders.js           # Gestión de pedidos
 │   ├── orders-ui.js        # Interfaz de usuario para pedidos
+│   ├── notifications.js    # Sistema de notificaciones (NUEVA FUNCIONALIDAD)
+│   ├── tracking-ui.js      # Interfaz de seguimiento (NUEVA FUNCIONALIDAD)
 │   └── main.js             # Funciones principales y utilidades
 └── README.md              # Documentación del proyecto
 ```
