@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TiendaWeb - Comercio Electrónico</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo"><i class="fas fa-shopping-bag"></i> TiendaWeb</h1>
+                <div class="nav-menu">
+                    <a href="#" class="nav-link">Inicio</a>
+                    <a href="#productos" class="nav-link">Productos</a>
+                    <a href="#ofertas" class="nav-link">Ofertas</a>
+                    <a href="#contacto" class="nav-link">Contacto</a>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sección Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Descubre los mejores productos</h2>
+                <p>Encuentra todo lo que necesitas con las mejores ofertas</p>
+                <button class="btn-primary" onclick="scrollToProducts()">Ver Productos</button>
+            </div>
+        </section>
+
+        <!-- Barra de búsqueda y filtros -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Buscar productos...">
+                    <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filters">
+                    <select id="category-filter" onchange="filterProducts()">
+                        <option value="">Todas las categorías</option>
+                        <option value="electronica">Electrónica</option>
+                        <option value="ropa">Ropa</option>
+                        <option value="hogar">Hogar</option>
+                        <option value="deportes">Deportes</option>
+                    </select>
+                    <select id="price-filter" onchange="filterProducts()">
+                        <option value="">Todos los precios</option>
+                        <option value="0-50">$0 - $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-200">$100 - $200</option>
+                        <option value="200+">$200+</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos -->
+        <section id="productos" class="products-section">
+            <div class="container">
+                <h2>Nuestros Productos</h2>
+                <div id="products-container" class="products-grid">
+                    <!-- Los productos se cargarán dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ofertas -->
+        <section id="ofertas" class="offers-section">
+            <div class="container">
+                <h2>Ofertas Especiales</h2>
+                <div class="offers-grid">
+                    <div class="offer-card">
+                        <h3>¡20% de descuento!</h3>
+                        <p>En toda la categoría de electrónicos</p>
+                        <button class="btn-secondary">Ver Ofertas</button>
+                    </div>
+                    <div class="offer-card">
+                        <h3>Envío Gratis</h3>
+                        <p>En compras superiores a $100</p>
+                        <button class="btn-secondary">Comprar Ahora</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Carrito de Compras (Modal) -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Carrito de Compras</h3>
+                <span class="close" onclick="toggleCart()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h4>Total: $<span id="cart-total">0.00</span></h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="clearCart()">Vaciar Carrito</button>
+                <button class="btn-primary" onclick="proceedToCheckout()">Proceder al Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Finalizar Compra</h3>
+                <span class="close" onclick="closeCheckout()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="customer-name">Nombre Completo:</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-email">Email:</label>
+                        <input type="email" id="customer-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-address">Dirección de Envío:</label>
+                        <textarea id="customer-address" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago:</label>
+                        <select id="payment-method" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="credit-card">Tarjeta de Crédito</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bank-transfer">Transferencia Bancaria</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCheckout()">Cancelar</button>
+                <button class="btn-primary" onclick="processPayment()">Confirmar Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaWeb. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

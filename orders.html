@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos - TiendaWeb</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/orders.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">
+                    <a href="index.html"><i class="fas fa-shopping-bag"></i> TiendaWeb</a>
+                </h1>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Tienda</a>
+                    <a href="orders.html" class="nav-link active">Pedidos</a>
+                    <a href="#" class="nav-link">Reportes</a>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="orders-main">
+        <div class="container">
+            <div class="orders-header">
+                <h1><i class="fas fa-clipboard-list"></i> Gestión de Pedidos</h1>
+                <div class="orders-actions">
+                    <button class="btn-primary" onclick="showOrderStats()">
+                        <i class="fas fa-chart-bar"></i> Estadísticas
+                    </button>
+                    <button class="btn-secondary" onclick="exportOrders()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros y búsqueda -->
+            <div class="orders-filters">
+                <div class="filter-group">
+                    <input type="text" id="search-orders" placeholder="Buscar pedidos..." 
+                           class="search-input">
+                    <button onclick="searchOrders()" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="filter-group">
+                    <select id="status-filter" onchange="filterOrders()">
+                        <option value="">Todos los estados</option>
+                        <option value="PENDING">Pendiente</option>
+                        <option value="CONFIRMED">Confirmado</option>
+                        <option value="PROCESSING">Procesando</option>
+                        <option value="SHIPPED">Enviado</option>
+                        <option value="DELIVERED">Entregado</option>
+                        <option value="CANCELLED">Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <input type="date" id="date-from" onchange="filterOrders()" title="Fecha desde">
+                    <input type="date" id="date-to" onchange="filterOrders()" title="Fecha hasta">
+                </div>
+
+                <button class="btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+            </div>
+
+            <!-- Lista de pedidos -->
+            <div class="orders-container">
+                <div id="orders-list" class="orders-list">
+                    <!-- Los pedidos se cargarán aquí dinámicamente -->
+                </div>
+
+                <!-- Paginación -->
+                <div id="pagination" class="pagination">
+                    <!-- La paginación se generará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de detalles del pedido -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="order-details-title">Detalles del Pedido</h3>
+                <span class="close" onclick="closeOrderDetails()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="order-details-content">
+                    <!-- El contenido se cargará dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeOrderDetails()">Cerrar</button>
+                <button id="update-status-btn" class="btn-primary" onclick="showUpdateStatusModal()">
+                    Actualizar Estado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de actualización de estado -->
+    <div id="update-status-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Actualizar Estado del Pedido</h3>
+                <span class="close" onclick="closeUpdateStatusModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="update-status-form">
+                    <div class="form-group">
+                        <label for="new-status">Nuevo Estado:</label>
+                        <select id="new-status" required>
+                            <option value="">Seleccionar estado...</option>
+                            <option value="CONFIRMED">Confirmado</option>
+                            <option value="PROCESSING">Procesando</option>
+                            <option value="SHIPPED">Enviado</option>
+                            <option value="DELIVERED">Entregado</option>
+                            <option value="CANCELLED">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status-note">Nota (opcional):</label>
+                        <textarea id="status-note" placeholder="Agregar una nota sobre el cambio de estado..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeUpdateStatusModal()">Cancelar</button>
+                <button class="btn-primary" onclick="updateOrderStatus()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de estadísticas -->
+    <div id="stats-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Estadísticas de Pedidos</h3>
+                <span class="close" onclick="closeStatsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="stats-content">
+                    <!-- Las estadísticas se cargarán dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeStatsModal()">Cerrar</button>
+                <button class="btn-primary" onclick="generateReport()">
+                    <i class="fas fa-file-pdf"></i> Generar Reporte
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrito de Compras (reutilizado) -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Carrito de Compras</h3>
+                <span class="close" onclick="toggleCart()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h4>Total: $<span id="cart-total">0.00</span></h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="clearCart()">Vaciar Carrito</button>
+                <button class="btn-primary" onclick="proceedToCheckout()">Proceder al Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaWeb. Sistema de Gestión de Pedidos.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/orders-ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
